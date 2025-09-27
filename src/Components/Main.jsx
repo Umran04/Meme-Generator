@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
 
 export default function Main() {
 
@@ -7,6 +8,26 @@ export default function Main() {
         topText : 'One does not simply',
         bottomText :  'Walk into Mordor'
     })
+
+    const [allMemes, setAllMemes] = useState([])
+
+    useEffect( () => {
+        fetch(`https://api.imgflip.com/get_memes`)
+        .then( res => res.json())
+        .then( data => {setAllMemes(data.data.memes), console.log(data)})
+
+        
+        },[] 
+    )
+
+    function getMemeImg (){
+        let randomMeme = Math.floor(Math.random() * allMemes.length)
+        let memeUrl = allMemes[randomMeme].url
+        setMeme(prevMeme => ({
+            ...prevMeme,
+            imageURL : memeUrl
+        }))
+    }
 
 
 
@@ -42,7 +63,7 @@ export default function Main() {
                         value={meme.bottomText}
                     />
                 </label>
-                <button>Get a new meme image 🖼</button>
+                <button onClick={getMemeImg}>Get a new meme image 🖼</button>
             </div>
             <div className="meme">
                 <img src={meme.imageURL} />
